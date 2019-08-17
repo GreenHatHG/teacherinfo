@@ -12,7 +12,7 @@
     <artifactId>teacherinfo</artifactId>
     <version>1.0.0</version>
     <name>teacherinfo</name>
-    <description>上传excel并保存里面的数据到mysql</description>
+    <description>teacherinfo表增删改查</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -278,122 +278,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <!--设置变量信息-->
-                        <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
-                        <io.springfox.staticdocs.snippetsOutputDir>${swagger.snippetOutput.dir}</io.springfox.staticdocs.snippetsOutputDir>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-
-            <!-- 首先，生成asciidoc（.adoc） -->
-            <plugin>
-                <groupId>io.github.swagger2markup</groupId>
-                <artifactId>swagger2markup-maven-plugin</artifactId>
-                <version>${swagger2markup.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-import-files-ext</artifactId>
-                        <version>${swagger2markup.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-                        <version>${swagger2markup.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <swaggerInput>${swagger.input}</swaggerInput>
-                    <outputDir>${generated.asciidoc.directory}</outputDir>
-                    <config>
-                        <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-                        <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
-
-                        <swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/main/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>
-                        <swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/main/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>
-                        <swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/main/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>
-                        <swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/main/asciidoc/extensions/security/</swagger2markup.extensions.dynamicSecurity.contentPath>
-
-                        <swagger2markup.extensions.springRestDocs.snippetBaseUri>${swagger.snippetOutput.dir}</swagger2markup.extensions.springRestDocs.snippetBaseUri>
-                        <swagger2markup.extensions.springRestDocs.defaultSnippets>true</swagger2markup.extensions.springRestDocs.defaultSnippets>
-                    </config>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>convertSwagger2markup</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 然后，使用Asciidoctor（前面在spring rest docs时已安装，在这需要加部分依赖）将.adoc转成pdf和html -->
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.3</version>
-
-                <!-- PDF依赖 -->
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-pdf</artifactId>
-                        <version>1.5.0-alpha.18</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jruby</groupId>
-                        <artifactId>jruby-complete</artifactId>
-                        <version>9.2.7.0</version>
-                    </dependency>
-                </dependencies>
-
-                <!-- 生成文件时的配置信息 -->
-                <configuration>
-                    <sourceDirectory>${asciidoctor.input.directory}</sourceDirectory>
-                    <sourceDocumentName>index.adoc</sourceDocumentName>
-                    <attributes>
-                        <doctype>book</doctype>
-                        <toc>left</toc>
-                        <toclevels>3</toclevels>
-                        <numbered></numbered>
-                        <hardbreaks></hardbreaks>
-                        <sectlinks></sectlinks>
-                        <sectanchors></sectanchors>
-                        <generated>${generated.asciidoc.directory}</generated>
-                    </attributes>
-                </configuration>
-
-                <executions>
-                    <!--生成html-->
-                    <execution>
-                        <id>output-html</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <outputDirectory>${asciidoctor.html.output.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-
-                    <!--生成pdf-->
-                    <!-- <execution>
-                        <id>output-pdf</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>pdf</backend>
-                            <outputDirectory>${asciidoctor.pdf.output.directory}</outputDirectory>
-                        </configuration>
-                    </execution> -->
-
-                </executions>
             </plugin>
 
         </plugins>
