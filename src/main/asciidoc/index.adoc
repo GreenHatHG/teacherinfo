@@ -1,0 +1,88 @@
+include::{generated}/overview.adoc[]
+=== Development environment
+- Java
+1.8.0_221
+- Mavenk
+3.6.1
+- Mysql
+8.0.17
+
+=== Notes
+
+==== table
+- 表名为teacherinfo
+- 主键为ftpNumber
+- 如果没有建表，默认会建表
+- 字段（字段需要一样，因为代码有原生sql语句，或者让程序自动创建表）：
+
+
+|===
+|name |job_number |office |phone |ftp_number | ftp_password
+
+|===
+
+==== id
+有些方法有id属性，id对应为ftpNumber，因为ftpNumber为主键，换个名称而已
+
+==== Excel
+excel文件格式实例
+
+- jobNumber和phone可为null，其他notnull
+- ftpNumber为主键，唯一
+|===
+|name |jobNumber |office |phone |ftpNumber |ftpPassword
+
+|1
+|1
+|1
+|1
+|100
+|1
+
+|2
+|2
+|2
+|2
+|200
+|2
+|===
+
+==== docker
+使用docker部署前需要安装好git,docker,MySQL,maven,jdk8及以上 +
+基础镜像：`openjdk:8-jdk-alpine`
+
+1. 拉取master分支代码 +
+`git clone https://github.com/GreenHatHG/teacherinfo.git`
+2. 进入对应目录下 +
+`cd teacherinfo`
+3. 配置 +
+这里说明下配置文件使用，需要配置MySQL对应的信息，配置文件如下 +
+`src/main/resources/application-product.properties` +
+需要配置以下项目：
+* 账户密码 +
+`spring.datasource.username` +
+`spring.datasource.password`
+* URL +
+`spring.datasource.url` +
+修改为正确的信息，一般只需要修改数据库名 +
+注意，如果你的MySQL也是docker容器，那么URL里面的ip地址需要改为容器名： +
+`jdbc:mysql://[容器名]:3306/TeacherInfo?`
+
+4. 测试 +
+`mvn clean spring-boot:run` +
+没有出现报错的话停止掉，接着进行下一步
+5. 打包 +
+`mvn clean package docker:build` +
+这时候就会打包成docker镜像 +
+注意，如果出现关于网络连接的错误，请给docker设置代理或者换源
+6. 运行 +
+`docker run --name teacherinfo -p 8080:8080 -td weacsoft/teacherinfo` +
+注意，如果MySQL为docker容器，需要改为下面方式 +
+`docker run --name teacherinfo -p 8080:8080 --link mysql:mysql -td weacsoft/teacherinfo` +
+--link第一个mysql为配置文件里面的对应的容器名，第二个mysql为本地docker运行mysql镜像生成的容器名
+7. 进入容器方法 +
+`docker exec -it teacherinfo sh`
+
+include::{generated}/paths.adoc[]
+include::{generated}/security.adoc[]
+include::{generated}/definitions.adoc[]
